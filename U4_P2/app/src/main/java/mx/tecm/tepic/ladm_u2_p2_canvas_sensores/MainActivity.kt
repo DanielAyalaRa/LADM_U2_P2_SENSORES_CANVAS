@@ -23,18 +23,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             SensorManager.SENSOR_DELAY_NORMAL)
 
         sensorManager.registerListener(this,
-            sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT),
+            sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY),
             SensorManager.SENSOR_DELAY_NORMAL)
 
         Lienzo = Focos(this)
         setContentView(Lienzo)
     }
 
-    override fun onSensorChanged(p0: SensorEvent?) {
-
+    override fun onSensorChanged(evento: SensorEvent?) {
+        if(evento!!.sensor.type == Sensor.TYPE_ACCELEROMETER){
+            Lienzo!!.fiesta = (evento.values[0]>=1f)
+        }
+        if(evento!!.sensor.type == Sensor.TYPE_PROXIMITY){
+            Lienzo!!.dia = (evento.values[0]>=1f)
+        }
+        Lienzo?.invalidate()
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    override fun onAccuracyChanged(evento: Sensor?, p1: Int) {
 
     }
 }

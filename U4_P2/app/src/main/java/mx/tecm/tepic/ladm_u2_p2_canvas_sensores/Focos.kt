@@ -11,29 +11,23 @@ class Focos (act:MainActivity): View(act) {
     val principal = act
 
     //Imagenes
-    val fantasma = BitmapFactory.decodeResource(principal.resources,R.drawable.velita)
     val apagado = BitmapFactory.decodeResource(principal.resources,R.drawable.apagado)
     val encendido = BitmapFactory.decodeResource(principal.resources,R.drawable.encendido)
     val encendido_color = BitmapFactory.decodeResource(principal.resources,R.drawable.encendidoazul)
+    val fondo1 = BitmapFactory.decodeResource(principal.resources,R.drawable.fondoterror)
+    val fondo2 = BitmapFactory.decodeResource(principal.resources,R.drawable.disco)
+    val fondo = BitmapFactory.decodeResource(principal.resources,R.drawable.principal)
+    val fantasma = Imagen(this, 200f, 1200f, R.drawable.velita)
 
     //variables de control
-    var dia = false
+    var dia = true
     var fiesta = false
 
-    //inicio de movimiento del fantasma
-    var fantasmaX = 700f
-    var mov = 20
-
-    val movFantasma = object: CountDownTimer(2000,80){
+    val movFantasma = object: CountDownTimer(3000,8000){
 
         override fun onTick(p0: Long) {
-            //lo que ejeccuta
-            fantasmaX =  fantasmaX + mov
+            repintar()
             invalidate()    //forzamos al ondraw a volver a pintarse
-
-            if (fantasmaX < 0f || fantasmaX > 700f) {
-                mov = -1 *mov
-            }
         }
 
         override fun onFinish() {
@@ -49,7 +43,7 @@ class Focos (act:MainActivity): View(act) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         var paint = Paint()
-        canvas.drawColor(Color.WHITE)
+        canvas.drawBitmap(fondo,0f,0f,paint)
 
         //Focos apagados
         canvas.drawBitmap(apagado,20f,100f,paint)
@@ -57,17 +51,36 @@ class Focos (act:MainActivity): View(act) {
         canvas.drawBitmap(apagado,700f,100f,paint)
 
         //Focos Encendidos
-        if(dia == true) {
+        if(dia == false) {
+            canvas.drawBitmap(fondo1,0f,0f,paint)
             canvas.drawBitmap(encendido,360f,100f,paint)
+            //nube
+            paint.color = Color.LTGRAY
+            canvas.drawOval(450f,950f,600f,900f, paint )
+            paint.color = Color.LTGRAY
+            canvas.drawOval(20f,100f,260f,150f, paint )
+            canvas.drawOval(225f,120f,455f,160f, paint )
+            paint.color = Color.LTGRAY
+            canvas.drawOval(460f,979f,220f,900f, paint )
+            canvas.drawOval(550f,1250f,700f,1200f, paint )
+            paint.color = Color.LTGRAY
+            canvas.drawOval(860f,1279f,620f,1200f, paint )
+
         }
 
         //Focos Encendidos de color azul
         if(fiesta == true) {
+            canvas.drawBitmap(fondo2,0f,0f,paint)
             canvas.drawBitmap(encendido_color,20f,100f,paint)
+            canvas.drawBitmap(encendido_color,360f,100f,paint)
             canvas.drawBitmap(encendido_color,700f,100f,paint)
         }
 
         //Fantasma
-        canvas.drawBitmap(fantasma,100f,1200f,paint)
+        fantasma.pintar(canvas,paint)
+    }
+    // Re-pintar fantasma
+    fun repintar(){
+        fantasma.coordRandom()
     }
 }
